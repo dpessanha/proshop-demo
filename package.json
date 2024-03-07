@@ -1,0 +1,16 @@
+{
+  "name": "proshop-v2-main",
+  "version": "1.0.0",
+  "description": "Udemy MERN course with Brad Traversy",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node backend/server.js"
+  },
+  "author": "Davi Pessanha",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.3"
+  }
+}
