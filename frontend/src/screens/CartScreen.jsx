@@ -82,6 +82,17 @@ const CartScreen = () => {
                 Proceed to Checkout
               </Button>
             </ListGroup.Item>
+            <ListGroup.Item>
+              <Link to='/'>
+                <Button
+                  type='button'
+                  className='btn-block btn-secondary'
+                  disabled={!cartItems.length}
+                >
+                  Back to Shopping
+                </Button>
+              </Link>
+            </ListGroup.Item>
           </ListGroup>
         </Card>
       </Col>
