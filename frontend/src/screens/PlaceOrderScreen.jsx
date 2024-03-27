@@ -14,7 +14,7 @@ import { toast } from 'react-toastify'
 import CheckoutSteps from '../components/CheckoutSteps.jsx'
 import Message from '../components/Message.jsx'
 import Loader from '../components/Loader.jsx'
-import { useCreateOrderMutation } from '../slices/OrdersApiSlice.js'
+import { useCreateOrderMutation } from '../slices/ordersApiSlice.js'
 import { clearCartItems } from '../slices/cartSlice.js'
 
 const PlaceOrderScreen = () => {
