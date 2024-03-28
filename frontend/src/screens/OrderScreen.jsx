@@ -12,6 +12,7 @@ import {
 import Message from '../components/Message.jsx'
 import Loader from '../components/Loader.jsx'
 import { useGetOrderDetailsQuery } from '../slices/ordersApiSlice'
+import { clearCartItems } from '../slices/cartSlice.js'
 
 const OrderScreen = () => {
   const { id: orderId } = useParams()
@@ -119,6 +120,7 @@ const OrderScreen = () => {
                 </Row>
               </ListGroup.Item>
               {/* PAY ORDER PLACEHOLDER */}
+              {/* dispatch(clearCartItems()) */}
               {/* MARK AS DELIVERED PLACEHOLDER */}
             </ListGroup>
           </Card>

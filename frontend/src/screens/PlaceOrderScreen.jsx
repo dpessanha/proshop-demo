@@ -15,7 +15,7 @@ import CheckoutSteps from '../components/CheckoutSteps.jsx'
 import Message from '../components/Message.jsx'
 import Loader from '../components/Loader.jsx'
 import { useCreateOrderMutation } from '../slices/ordersApiSlice.js'
-import { clearCartItems } from '../slices/cartSlice.js'
+// import { clearCartItems } from '../slices/cartSlice.js'
 
 const PlaceOrderScreen = () => {
   const navigate = useNavigate()
@@ -42,7 +42,7 @@ const PlaceOrderScreen = () => {
         taxPrice: cart.taxPrice,
         totalPrice: cart.totalPrice,
       }).unwrap()
-      dispatch(clearCartItems())
+      // dispatch(clearCartItems())
       navigate(`/order/${res._id}`)
     } catch (error) {
       toast.error(error)
