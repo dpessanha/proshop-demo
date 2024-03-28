@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import {
   Row,
@@ -18,7 +19,7 @@ import { useSelector } from 'react-redux'
 import {
   useGetOrderDetailsQuery,
   usePayOrderMutation,
-  useGetPayPalClientIdQuery,
+  useGetPaypalClientIdQuery,
 } from '../slices/ordersApiSlice'
 import { clearCartItems } from '../slices/cartSlice.js'
 
@@ -31,13 +32,15 @@ const OrderScreen = () => {
     error,
   } = useGetOrderDetailsQuery(orderId)
 
+  const dispatch = useDispatch()
+
   const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation()
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer()
   const {
     data: paypal,
     isLoading: loadingPayPal,
     error: errorPayPal,
-  } = useGetPayPalClientIdQuery()
+  } = useGetPaypalClientIdQuery()
   const { userInfo } = useSelector((state) => state.login)
 
   useEffect(() => {
@@ -59,6 +62,42 @@ const OrderScreen = () => {
       }
     }
   }, [order, paypal, paypalDispatch, loadingPayPal, errorPayPal])
+
+  function OnApprove(data, actions) {
+    return actions.order.capture().then(async function (details) {
+      try {
+        await payOrder({ orderId, details })
+        refetch()
+        toast.success('Payment successful!')
+      } catch (err) {
+        toast.error(err?.data?.message || err.message)
+      }
+    })
+  }
+  async function OnApproveTest() {
+    await payOrder({ orderId, details: { payer: {} } })
+    refetch()
+    dispatch(clearCartItems())
+    toast.success('Payment successful!')
+  }
+  function OnError(err) {
+    toast.error(err.message)
+  }
+  function createOrder(data, actions) {
+    return actions.order
+      .create({
+        purchase_units: [
+          {
+            amount: {
+              value: order.totalPrice,
+            },
+          },
+        ],
+      })
+      .then((orderId) => {
+        return orderId
+      })
+  }
 
   return isLoading ? (
     <Loader />
@@ -157,7 +196,31 @@ const OrderScreen = () => {
                 </Row>
               </ListGroup.Item>
               {/* PAY ORDER PLACEHOLDER */}
-              {/* dispatch(clearCartItems()) */}
+              {!order.isPaid && (
+                <ListGroup.Item>
+                  {loadingPay && <Loader />}
+                  {isPending ? (
+                    <Loader />
+                  ) : (
+                    <div>
+                      <Button
+                        onClick={OnApproveTest}
+                        style={{ marginBottom: '10px' }}
+                      >
+                        Test Pay Order
+                      </Button>
+                      <div>
+                        <PayPalButtons
+                          createOrder={createOrder}
+                          onApprove={OnApprove}
+                          onError={OnError}
+                        ></PayPalButtons>
+                      </div>
+                    </div>
+                  )}
+                </ListGroup.Item>
+              )}
+
               {/* MARK AS DELIVERED PLACEHOLDER */}
             </ListGroup>
           </Card>
